@@ -1,40 +1,29 @@
 import requests
+import telegram
 import tweepy
 
-
-def get_updates(input):
-    response = requests.get(input + 'getUpdates')
-    return response
-
 def main():
-    #get key for telegram
-    telegram = 'https://api.telegram.org/bot'
-    key = open("API key.txt", "r")
-    telegram += key.readline()
+    #store api keys externally (not on git)
+    keys = open("API key.txt", "r")
+
+    #get telegram keys
+    telegram_key = keys.readline().strip()
+    telegram_bot = telegram.Bot(telegram_key)
+    print(telegram_bot.get_me())
 
     #get keys for twitter
-    consumer_key = key.readline()
-    secret_key = key.readline()
-    auth = tweepy.OAuthHandler(consumer_key, secret_key)
-
-    try:
-        redirect_url = auth.get_authorization_url()
-    except tweepy.TweepError:
-        print("Error! Failed to get request token")
-
-    #TODO: figure out wth is going on
-    auth.request_token = { 'oauth_token' : token,'oauth_token_secret' : verifier }
-    try:
-        auth.get_access_token(verifier)
-    except tweepy.TweepError:
-        print('Error! Failed to get access token.')
+    consumer_key = keys.readline().strip()
+    consumer_secret = keys.readline().strip()
+    access_token = keys.readline().strip()
+    access_secret = keys.readline().strip()
 
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(key, secret)
+    auth.set_access_token(access_token, access_secret)
+    twitter = tweepy.API(auth)
+
+    twitter.update_status(status="Testing Twitter API")
 
     #start doing cool stuff
-    getUpdates = get_updates(telegram)
-    print(getUpdates)
 
 if __name__ == "__main__":
     main()
