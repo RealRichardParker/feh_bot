@@ -3,11 +3,13 @@ import telegram.ext as ext
 import logging
 import tweepy
 import ConfigParser
+import tweet_listener
 
 # TODO: parse keys from config file instead of API key.txt
 
 # dictionary of all chats and what accounts to track
 chat_map = dict()
+
 # list of followers to keep track of (5 max?)
 follow_list = []
 
@@ -29,6 +31,11 @@ access_secret = keys.readline().strip()
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_secret)
 twitter = tweepy.API(auth)
+
+# creates listener and stream for inputted user
+listener = tweet_listener.TweetStreamListener(twitter, telegram_bot)
+stream = tweepy.Stream(auth = twitter.auth, listener = listener)
+stream.filter(follow = follow_list, async=True)
 
 def main():
     # set up logging
@@ -55,15 +62,12 @@ def main():
     add_handler = ext.CommandHandler('add', add, pass_args=True)
     dispatcher.add_handler(add_handler)
 
+    # list followers
     list_handler = ext.CommandHandler('list_followed', list_followed)
     dispatcher.add_handler(list_handler)
 
     updater.start_polling()
     
-    # creates listener and stream for inputted user
-    listener = TweetStreamListener(twitter, telegram_bot)
-    stream = tweepy.Stream(auth = twitter.auth, listener = listener)
-    stream.filter(follow = follow_list, async=True)
 
 # bot commands
 def start(bot, update):
@@ -101,30 +105,6 @@ def help(bot, update):
                 "/list_followed - lists out which Twitter accounts I am monitoring for updates"
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
 
-# Listener for Twitter, overrides tweepy's StreamListener to provide 
-# functionality for telegram
-class TweetStreamListener(tweepy.StreamListener):
-
-    def on_status(self, status):
-        #print(status.text)
-        print(self.telegram.get_me())
-
-        # start doing cool things on update
-
-    # On rate limit over, disconnect stream
-    # else restart stream    
-    def on_error(self, status_code):
-        if status_code != 420:
-            return False
-        else:
-            return True
-
-    # Passes twitter api and telegram bot as "instance variables" (not sure 
-    # what) equivalent in python is
-    def __init__(self, twitter, bot):
-        self.api = twitter
-        self.telegram = bot
-        #print(bot.get_me())
 
 if __name__ == "__main__":
     main()
