@@ -49,17 +49,23 @@ def main():
     follow_list = [str(twitter.get_user(username).id)]
     print(follow_list)
     '''
+
     # telegram bot stuff
     updater = ext.Updater(bot = telegram_bot)
     dispatcher = updater.dispatcher
+    init_handlers(dispatcher)
+    updater.start_polling()
+
+# handlers for telegram commands
+def init_handlers(dispatcher):
 
     # start command
     start_handler = ext.CommandHandler('start', start)
     dispatcher.add_handler(start_handler)
 
     # add to follower list
-    add_handler = ext.CommandHandler('add', add, pass_args=True)
-    dispatcher.add_handler(add_handler)
+    follow_handler = ext.CommandHandler('follow', follow, pass_args=True)
+    dispatcher.add_handler(follow_handler)
 
     # list followers
     list_handler = ext.CommandHandler('list_followed', list_followed)
@@ -69,15 +75,12 @@ def main():
     help_handler = ext.CommandHandler("help", help)
     dispatcher.add_handler(help_handler)
 
-    updater.start_polling()
-    
-
 # bot commands
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello! I am Feh Bot, and I follow Twitter accounts!")
 
 # fafds45132 is a invalid account
-def add(bot, update, args):
+def follow(bot, update, args):
     new_user = args[0]
     output_text = ""
     if(follow_list.count(new_user) >= 1):
@@ -107,7 +110,7 @@ def list_followed(bot, update):
 def help(bot, update):
     help_text = "Here are the commands you can use:\n\n" \
                 "/start - starts the bot in this chat\n" \
-                "/add USERNAME - adds USERNAME to the follow list\n" \
+                "/follow USERNAME - adds USERNAME to the follow list\n" \
                 "/list_followed - lists out which Twitter accounts I am monitoring for updates\n" \
                 "/help - prints this message"
     bot.send_message(chat_id=update.message.chat_id, text=help_text)

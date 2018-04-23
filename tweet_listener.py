@@ -1,5 +1,7 @@
 import tweepy
 
+#TODO: may need to figure out if external class can be used or not, need the list of chats and stuff
+
 # Listener for Twitter, overrides tweepy's StreamListener to provide 
 # functionality for telegram
 class TweetStreamListener(tweepy.StreamListener):
