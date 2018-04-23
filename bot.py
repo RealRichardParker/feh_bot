@@ -35,7 +35,6 @@ twitter = tweepy.API(auth)
 # creates listener and stream for inputted user
 listener = tweet_listener.TweetStreamListener(twitter, telegram_bot)
 stream = tweepy.Stream(auth = twitter.auth, listener = listener)
-stream.filter(follow = follow_list, async=True)
 
 def main():
     # set up logging
@@ -66,13 +65,16 @@ def main():
     list_handler = ext.CommandHandler('list_followed', list_followed)
     dispatcher.add_handler(list_handler)
 
+    # help command
+    help_handler = ext.CommandHandler("help", help)
+    dispatcher.add_handler(help_handler)
+
     updater.start_polling()
     
 
 # bot commands
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello! I am Feh Bot, and I follow Twitter accounts!")
-
 
 # fafds45132 is a invalid account
 def add(bot, update, args):
@@ -87,24 +89,28 @@ def add(bot, update, args):
             output_text = "Now following " + new_user + "."
         except tweepy.error.TweepError:
             output_text = "Error: " + new_user + " is not a valid Twitter account"
-    bot.send_message(chat_id=update.message.chat_id, text=output_text)
+        bot.send_message(chat_id=update.message.chat_id, text=output_text)
+        stream.filter(follow = follow_list, async=True)
 
 def list_followed(bot, update):
-    output_text = "Here are the accounts I am currently following:\n"
-    for index in range(0, len(follow_list)):
-        if(index == len(follow_list)):
-            output_text += follow_list[index]
-        else:
-            output_text += follow_list[index] + "\n"
-    bot.send_message(chat_id=update.message.chat_id, text=output_text)
+    if(len(follow_list) == 0):
+        bot.send_message(chat_id=update.message.chat_id, text="I am not currently following any accounts.")
+    else:
+        output_text = "Here are the accounts I am currently following:\n"
+        for index in range(0, len(follow_list)):
+            if(index == len(follow_list)):
+                output_text += follow_list[index]
+            else:
+                output_text += follow_list[index] + "\n"
+        bot.send_message(chat_id=update.message.chat_id, text=output_text)
 
 def help(bot, update):
-    help_text = "Hello, I am feh_bot! I listen to Twitter accounts and post to chats when an account makes a tweet\n" \
+    help_text = "Here are the commands you can use:\n\n" \
                 "/start - starts the bot in this chat\n" \
                 "/add USERNAME - adds USERNAME to the follow list\n" \
-                "/list_followed - lists out which Twitter accounts I am monitoring for updates"
+                "/list_followed - lists out which Twitter accounts I am monitoring for updates\n" \
+                "/help - prints this message"
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
-
 
 if __name__ == "__main__":
     main()
