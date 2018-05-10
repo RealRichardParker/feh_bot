@@ -20,9 +20,13 @@ class TweetStreamListener(tweepy.StreamListener):
         else:
             return True
 
+    def update_listener(self, account):
+        self.account_list.append(account)
+
     # Passes twitter api and telegram bot as "instance variables" (not sure 
     # what) equivalent in python is
     def __init__(self, twitter, bot):
         self.api = twitter
         self.telegram = bot
+        self.account_list = []
         #print(bot.get_me())
