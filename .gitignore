@@ -2,4 +2,5 @@ API key.txt
 *.png
 *.pyc
 tester_file.py
+*.cfg
 .vscode/
