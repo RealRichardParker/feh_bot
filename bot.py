@@ -14,18 +14,19 @@ chat_map = dict()
 # follow_list = []
 
 # store api keys externally (not on git)
-keys = open("API key.txt", "r")
+config = ConfigParser.RawConfigParser()
+config.read('config.cfg')
 
 # get telegram keys
-telegram_key = keys.readline().strip()
+telegram_key = config.get('Telegram API Keys', 'key')
 telegram_bot = telegram.Bot(telegram_key)
 print(telegram_bot.get_me())
 
 # get keys for twitter
-consumer_key = keys.readline().strip()
-consumer_secret = keys.readline().strip()
-access_token = keys.readline().strip()
-access_secret = keys.readline().strip()
+consumer_key = config.get('Twitter API Keys', 'consumer key')
+consumer_secret = config.get('Twitter API Keys', 'consumer secret')
+access_token = config.get('Twitter API Keys', 'access token')
+access_secret = config.get('Twitter API Keys', 'access secret')
 
 # authorize twitter api usage
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
