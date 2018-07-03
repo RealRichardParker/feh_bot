@@ -1,6 +1,6 @@
 API key.txt
 *.png
 *.pyc
-tester_file.py
+generate_config.py
 *.cfg
 .vscode/
