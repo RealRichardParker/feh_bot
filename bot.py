@@ -165,11 +165,13 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
 
 def save_chat_map():
+    print("saving chat map...")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
     os.chdir(data_dir)
     with open('chat_map.pkl', 'wb') as file:
         pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
+    print('chat map saved!')
 
 if __name__ == "__main__":
     atexit.register(save_chat_map)
