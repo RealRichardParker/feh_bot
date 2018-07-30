@@ -8,6 +8,9 @@ import os
 import pickle
 
 #TODO: store keys in env variables
+#TODO: export chat_map using pickle
+
+config_file = 'config.cfg'
 
 def main():
     # set up logging
@@ -35,7 +38,7 @@ def main():
 
 def read_config():
     config = ConfigParser.RawConfigParser()
-    config.read('config2.cfg')
+    config.read(config_file)
 
     #global vars
     global telegram_bot
@@ -65,8 +68,8 @@ def read_config():
 
     # reads in data from previous instance, if it exists
     data_dir = config.get('Data Storage Directory', 'dir')
-    pwd = os.path.dirname(__file__)
-    data_dir = os.path.join(pwd, data_dir)
+    #pwd = os.path.dirname(__file__)
+    #data_dir = os.path.join(pwd, data_dir)
     files = os.listdir(data_dir)
     print("dir of data: " + data_dir)
     print("files in dir: ")
