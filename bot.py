@@ -6,6 +6,7 @@ import ConfigParser
 import tweet_listener
 import os
 import pickle
+import atexit
 
 #TODO: store keys in env variables
 #TODO: export chat_map using pickle
@@ -30,7 +31,7 @@ def main():
     chat_map = dict()
     read_config()
 
-    # telegram bot stuff
+    # set up telegram telegram bot 
     updater = ext.Updater(bot = telegram_bot)
     dispatcher = updater.dispatcher
     init_handlers(dispatcher)
@@ -67,14 +68,14 @@ def read_config():
     stream = tweepy.Stream(auth = twitter.auth, listener = listener)
 
     # reads in data from previous instance, if it exists
+    global data_dir
     data_dir = config.get('Data Storage Directory', 'dir')
-    #pwd = os.path.dirname(__file__)
-    #data_dir = os.path.join(pwd, data_dir)
-    files = os.listdir(data_dir)
-    print("dir of data: " + data_dir)
-    print("files in dir: ")
-    for file in files:
-        print(file)
+    if(os.path.isdir(data_dir)):
+        files = os.listdir(data_dir)
+        print("dir of data: " + data_dir)
+        print("files in " + data_dir + ": ")
+        for file in files:
+            print(file)
 
 
 # handlers for telegram commands
@@ -163,5 +164,13 @@ def help(bot, update):
                 "/help - prints this message"
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
 
+def save_chat_map():
+    if not os.path.isdir(data_dir):
+        os.mkdir(data_dir)
+    os.chdir(data_dir)
+    with open('chat_map.pkl', 'wb') as file:
+        pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
+
 if __name__ == "__main__":
+    atexit.register(save_chat_map)
     main()
