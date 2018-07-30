@@ -1,16 +1,15 @@
 import ConfigParser
 import platform
+from os import environ
 
-config_file = 'config.cfg'
+config_file = 'config2.cfg'
 
 # because windows is dumb, this has to be done
 system = platform.system()
 if system == 'Windows':
-    path = '\\data'
-elif system == 'Linux':
-    path = '/opt/feh_bot'
+    path = environ['APPDATA'] + '\\feh_bot'
 else:
-    path = '/data'
+    path = '/opt/feh_bot'
 
 config = ConfigParser.RawConfigParser()
 
