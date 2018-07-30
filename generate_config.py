@@ -11,5 +11,8 @@ config.set('Twitter API Keys', 'consumer key', 0)
 config.add_section('Telegram API Keys')
 config.set('Telegram API Keys', 'key', 0)
 
-with open('config.cfg', 'w') as configFile:
+config.add_section('Data Storage Directory')
+config.set('Data Storage Directory','dir', './data')
+
+with open('config2.cfg', 'w') as configFile:
     config.write(configFile)
