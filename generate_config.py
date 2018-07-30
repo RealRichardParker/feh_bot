@@ -4,8 +4,11 @@ import platform
 config_file = 'config.cfg'
 
 # because windows is dumb, this has to be done
-if platform.system() == 'Windows':
+system = platform.system()
+if system == 'Windows':
     path = '\\data'
+elif system == 'Linux':
+    path = '/opt/feh_bot'
 else:
     path = '/data'
 
