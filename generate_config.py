@@ -1,7 +1,7 @@
 import ConfigParser
 import platform
 
-config_file = 'config2.cfg'
+config_file = 'config.cfg'
 
 # because windows is dumb, this has to be done
 if platform.system() == 'Windows':
