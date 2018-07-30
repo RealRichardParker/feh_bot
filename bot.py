@@ -4,38 +4,10 @@ import logging
 import tweepy
 import ConfigParser
 import tweet_listener
+import os
+import pickle
 
-# TODO: parse keys from config file instead of API key.txt
-
-# dictionary of all chats and what accounts to track
-chat_map = dict()
-
-# list of followers to keep track of (5 max?)
-# follow_list = []
-
-# store api keys externally (not on git)
-config = ConfigParser.RawConfigParser()
-config.read('config.cfg')
-
-# get telegram keys
-telegram_key = config.get('Telegram API Keys', 'key')
-telegram_bot = telegram.Bot(telegram_key)
-print(telegram_bot.get_me())
-
-# get keys for twitter
-consumer_key = config.get('Twitter API Keys', 'consumer key')
-consumer_secret = config.get('Twitter API Keys', 'consumer secret')
-access_token = config.get('Twitter API Keys', 'access token')
-access_secret = config.get('Twitter API Keys', 'access secret')
-
-# authorize twitter api usage
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_secret)
-twitter = tweepy.API(auth)
-
-# creates listener and stream for inputted user
-listener = tweet_listener.TweetStreamListener(twitter, telegram_bot)
-stream = tweepy.Stream(auth = twitter.auth, listener = listener)
+#TODO: store keys in env variables
 
 def main():
     # set up logging
@@ -51,11 +23,56 @@ def main():
     print(follow_list)
     '''
 
+    global chat_map 
+    chat_map = dict()
+    read_config()
+
     # telegram bot stuff
     updater = ext.Updater(bot = telegram_bot)
     dispatcher = updater.dispatcher
     init_handlers(dispatcher)
     updater.start_polling()
+
+def read_config():
+    config = ConfigParser.RawConfigParser()
+    config.read('config2.cfg')
+
+    #global vars
+    global telegram_bot
+    global twitter
+    global listener
+    global stream
+
+    # get telegram keys
+    telegram_key = config.get('Telegram API Keys', 'key')
+    telegram_bot = telegram.Bot(telegram_key)
+    print(telegram_bot.get_me())
+
+    # get keys for twitter
+    consumer_key = config.get('Twitter API Keys', 'consumer key')
+    consumer_secret = config.get('Twitter API Keys', 'consumer secret')
+    access_token = config.get('Twitter API Keys', 'access token')
+    access_secret = config.get('Twitter API Keys', 'access secret')
+
+    # authorize twitter api usage
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_secret)
+    twitter = tweepy.API(auth)
+
+    # creates listener and stream for inputted user
+    listener = tweet_listener.TweetStreamListener(twitter, telegram_bot)
+    stream = tweepy.Stream(auth = twitter.auth, listener = listener)
+
+    # reads in data from previous instance, if it exists
+    data_dir = config.get('Data Storage Directory', 'dir')
+    pwd = os.path.dirname(__file__)
+    data_dir = os.path.join(pwd, data_dir)
+    files = os.listdir(data_dir)
+    print("dir of data: " + data_dir)
+    print("files in dir: ")
+    for file in files:
+        print(file)
+
 
 # handlers for telegram commands
 def init_handlers(dispatcher):
