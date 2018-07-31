@@ -2,5 +2,6 @@ API key.txt
 *.png
 *.pyc
 *.cfg
+*test*
 .vscode/
 data/
