@@ -2,7 +2,7 @@ import telegram
 import telegram.ext as ext
 import logging
 import tweepy
-import ConfigParser
+import configparser
 import tweet_listener
 import os
 import pickle
@@ -39,7 +39,7 @@ def main():
     updater.start_polling()
 
 def read_config():
-    config = ConfigParser.RawConfigParser()
+    config = configparser.ConfigParser()
     config.read(config_file)
 
     #global vars
@@ -125,7 +125,7 @@ def follow(bot, update, args):
         bot.send_message(chat_id=update.message.chat_id, text=output_text)
         chat_map[new_account] = set([chat_id])
         listener.update_listener(new_account)
-        stream.filter(listener.account_list, async_=True)
+        stream.filter(listener.account_list, async=True)
 
     """        
     if(follow_list.count(new_account) >= 1):
@@ -144,7 +144,7 @@ def follow(bot, update, args):
 def list_followed(bot, update):
     follow_set = set() 
     chat_id = update.message.chat_id
-    for account, chat_id_list in chat_map.iteritems():
+    for account, chat_id_list in chat_map.items():
         if(chat_id in chat_id_list):
             follow_set.add(account)
     # print("finished looking through set")
