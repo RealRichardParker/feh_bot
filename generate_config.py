@@ -1,6 +1,6 @@
 import ConfigParser
 import platform
-from os import environ
+import os
 
 config_file = 'config.cfg'
 
@@ -9,7 +9,9 @@ system = platform.system()
 if system == 'Windows':
     path = environ['APPDATA'] + '\\feh_bot'
 else:
-    path = '/var/lib/feh_bot'
+    # using an absolute path in linux was running into several permission errors
+    pwd = os.path.dirname(__file__)
+    path = os.path.join(pwd, 'feh_bot')
 
 config = ConfigParser.RawConfigParser()
 
