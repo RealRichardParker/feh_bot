@@ -32,6 +32,7 @@ def main():
     read_config()
 
     # set up telegram telegram bot 
+    global updater
     updater = ext.Updater(bot = telegram_bot)
     dispatcher = updater.dispatcher
     init_handlers(dispatcher)
@@ -165,6 +166,7 @@ def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
 
 def save_chat_map(signum, frame):
+    updater.stop()
     print("feh_bot: saving chat map...")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
