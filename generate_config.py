@@ -2,7 +2,7 @@ import ConfigParser
 import platform
 from os import environ
 
-config_file = 'config2.cfg'
+config_file = 'config.cfg'
 
 # because windows is dumb, this has to be done
 system = platform.system()
@@ -25,5 +25,5 @@ config.set('Telegram API Keys', 'key', 0)
 config.add_section('Data Storage Directory')
 config.set('Data Storage Directory','dir', path)
 
-with open(config_file, 'w') as configFile:
+with open(config_file, 'wb') as configFile:
     config.write(configFile)

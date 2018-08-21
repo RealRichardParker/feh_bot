@@ -6,10 +6,10 @@ import ConfigParser
 import tweet_listener
 import os
 import pickle
-import atexit
+import signal
 
 #TODO: store keys in env variables
-#TODO: export chat_map using pickle
+#TODO: export chat_map using pickle on program exit
 
 config_file = 'config.cfg'
 
@@ -164,15 +164,21 @@ def help(bot, update):
                 "/help - prints this message"
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
 
-def save_chat_map():
-    print("saving chat map...")
+def save_chat_map(signum, frame):
+    print("feh_bot: saving chat map...")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
     os.chdir(data_dir)
+    print(os.getcwd())
+    pickle.dump(chat_map, open('chat_map.pkl', 'wb'))
+    """
     with open('chat_map.pkl', 'wb') as file:
         pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
-    print('chat map saved!')
+    """
+    print('feh_bot: chat map saved!')
+    exit()
 
 if __name__ == "__main__":
-    atexit.register(save_chat_map)
+    signal.signal(signal.SIGTERM, save_chat_map)
+    signal.signal(signal.SIGINT, save_chat_map)
     main()
