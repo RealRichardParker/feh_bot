@@ -178,7 +178,7 @@ def save_chat_map(signum, frame):
         pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
     """
     print('feh_bot: chat map saved!')
-    sys.exit()
+    raise SystemExit
 
 if __name__ == "__main__":
     signal.signal(signal.SIGTERM, save_chat_map)
