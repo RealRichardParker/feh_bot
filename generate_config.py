@@ -9,7 +9,7 @@ system = platform.system()
 if system == 'Windows':
     path = environ['APPDATA'] + '\\feh_bot'
 else:
-    path = '/opt/feh_bot'
+    path = '/var/lib/feh_bot'
 
 config = ConfigParser.RawConfigParser()
 
