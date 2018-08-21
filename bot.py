@@ -125,7 +125,7 @@ def follow(bot, update, args):
         bot.send_message(chat_id=update.message.chat_id, text=output_text)
         chat_map[new_account] = set([chat_id])
         listener.update_listener(new_account)
-        stream.filter(listener.account_list, async=True)
+        stream.filter(listener.account_list, async_=True)
 
     """        
     if(follow_list.count(new_account) >= 1):
