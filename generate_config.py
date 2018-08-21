@@ -10,7 +10,7 @@ if system == 'Windows':
     path = environ['APPDATA'] + '\\feh_bot'
 else:
     # using an absolute path in linux was running into several permission errors
-    pwd = 'feh_bot'
+    pwd = 'data'
 
 config = ConfigParser.RawConfigParser()
 
