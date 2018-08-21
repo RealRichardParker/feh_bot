@@ -10,8 +10,7 @@ if system == 'Windows':
     path = environ['APPDATA'] + '\\feh_bot'
 else:
     # using an absolute path in linux was running into several permission errors
-    pwd = os.path.dirname(__file__)
-    path = os.path.join(pwd, 'feh_bot')
+    pwd = 'feh_bot'
 
 config = ConfigParser.RawConfigParser()
 
