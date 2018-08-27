@@ -1,34 +1,42 @@
 # feh_bot
-feh_bot is a bot that forwards tweets in real-time to Telegram group chats or individuals. Hosted on an AWS EC2 Instance
+feh_bot is a bot that forwards tweets in real-time to Telegram group chats or individuals. 
 
-## Planned Features
-* Updating chats of any missed Tweets in case of going offline 
+### Planned Features
+
 * Maintaining data between instances
+* Updating chats of any missed Tweets in case of bot going offline
 
-# Getting Started
-## Prerequisites
+## Getting Started
+
+### Prerequisites
 
 Python 3.6 is required for this project, found [here](https://www.python.org/downloads/release/python-366/)
 
 Install the python packages python-telegram-bot and tweepy
 
-```
+```bash
 pip install python-telegram-bot --upgrade
 pip install tweepy --upgrade
 ```
-## Installing
+
+### Installing
+
 Clone this repository
 
-```
+```bash
 git clone https://github.com/RealRichardParker/feh_bot.git
 ```
+
 Run the script generate_config.py
-```
+
+```bash
 python3 generate_config.py
 ```
+
 A file called config.cfg will be created, open it and replace all the 0 with the Twitter and Telegram API keys.
 
 Twitter keys can be obtained by
+
 1. Visiting https://apps.twitter.com/ and logging in
 2. Clicking "Create App"
 3. Filling out the form and agreeing to the Terms and Conditions
@@ -37,15 +45,17 @@ Twitter keys can be obtained by
 
 Telegram API key can be obtained from the [@Botfather](https://t.me/BotFather)
 
-# Usage
-## Starting the bot
+## Usage
+
+### Starting the bot
+
 1. Add [@feh_bot](https://t.me/feh_news_bot)
 
 2. Run the /start command
 
 3. Start following Twitter accounts
 
-## Commands
+### Commands
 
 | Command        | Description           | Usage  |
 | --- |---| ---|
@@ -54,10 +64,16 @@ Telegram API key can be obtained from the [@Botfather](https://t.me/BotFather)
 | /list_followed | Lists any Twitter Accounts that this chat is following      |    /list_followed |
 |/help | Displays a help message | /help
 
-# Built With
+## Releases
+
+Changelog can be found [here](CHANGELOG.md)
+
+## Built With
+
 [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
 
 [tweepy](http://www.tweepy.org/)
 
-# License
+## License
+
 This project is licensed under the MIT License - see the LICENSE.txt file for details
