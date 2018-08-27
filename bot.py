@@ -83,6 +83,7 @@ def read_config():
             print(file)
         if is_loaded:
             print('previous data loaded!')
+            print(chat_map)
         else:
             print("no data loaded")
 
