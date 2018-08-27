@@ -1,30 +1,24 @@
-import ConfigParser
+import configparser
 import platform
 import os
 
-config_file = 'config.cfg'
+config_file = 'config2.cfg'
 
 # because windows is dumb, this has to be done
 system = platform.system()
 if system == 'Windows':
-    path = environ['APPDATA'] + '\\feh_bot'
+    path = os.environ['APPDATA'] + '\\feh_bot'
 else:
     # using an absolute path in linux was running into several permission errors
     pwd = 'data'
 
-config = ConfigParser.RawConfigParser()
+config = configparser.ConfigParser()
 
-config.add_section('Twitter API Keys')
-config.set('Twitter API Keys', 'access secret', 0)
-config.set('Twitter API Keys', 'access token', 0)
-config.set('Twitter API Keys', 'consumer secret', 0)
-config.set('Twitter API Keys', 'consumer key', 0)
+config['Twitter API Keys'] =  {'access secret': 0, 'access token': 0, 'consumer secret': 0, 'consumer key': 0}
 
-config.add_section('Telegram API Keys')
-config.set('Telegram API Keys', 'key', 0)
+config['Telegram API Keys'] = {'key': 0}
 
-config.add_section('Data Storage Directory')
-config.set('Data Storage Directory','dir', path)
+config['Data Storage Directory'] = {'dir': path}
 
-with open(config_file, 'wb') as configFile:
+with open(config_file, 'w') as configFile:
     config.write(configFile)
