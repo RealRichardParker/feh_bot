@@ -73,10 +73,12 @@ def read_config():
     data_dir = config.get('Data Storage Directory', 'dir')
     if(os.path.isdir(data_dir)):
         files = os.listdir(data_dir)
-        print("dir of data: " + data_dir)
-        print("files in " + data_dir + ": ")
+        print("loading previous data...")
         for file in files:
+            if file.endswith('.pkl'):
+                chat_map = pickle.load(file)
             print(file)
+        print("Loaded!")
 
 
 # handlers for telegram commands
