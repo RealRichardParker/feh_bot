@@ -76,7 +76,7 @@ def read_config():
         print("attempting to loading previous data...")
         for file in files:
             if file.endswith('.pkl'):
-                chat_map = pickle.load(file)
+                chat_map = pickle.load(open(file, 'rb'))
                 print("Loaded!")
             else:
                 print("no data loaded")
