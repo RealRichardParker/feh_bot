@@ -73,14 +73,18 @@ def read_config():
     data_dir = config.get('Data Storage Directory', 'dir')
     if(os.path.isdir(data_dir)):
         files = os.listdir(data_dir)
-        print("attempting to loading previous data...")
+        os.chdir(data_dir)
+        print("attempting to load previous data...")
+        is_loaded = False
         for file in files:
             if file.endswith('.pkl'):
                 chat_map = pickle.load(open(file, 'rb'))
-                print("Loaded!")
-            else:
-                print("no data loaded")
+                is_loaded = True
             print(file)
+        if is_loaded:
+            print('previous data loaded!')
+        else:
+            print("no data loaded")
 
 
 # handlers for telegram commands
