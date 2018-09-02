@@ -4,7 +4,7 @@
 
 ### Changes
 
-* Initial Completion, original idea is complete
+* Initial Completion, original idea is thought to be complete
 * Maintaining data between versions is not working properly
 
 ## Future Potential Changes
