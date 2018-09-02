@@ -28,8 +28,6 @@ def main():
     print(follow_list)
     '''
 
-    global chat_map 
-    chat_map = dict()
     read_config()
 
     # set up telegram telegram bot 
@@ -81,13 +79,15 @@ def read_config():
         if is_loaded:
             print('previous data loaded!')
             print(chat_map)
+            listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map)
         else:
             print("no data loaded")
+            listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, dict())
 
     # creates listener and stream for inputted user
-    listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map.keys())
+    
     stream = tweepy.Stream(auth = twitter.auth, listener = listener)
-    stream.filter(listener.account_list, async=True)
+    stream.filter(listener.chat_map.keys(), async=True)
 
 
 # handlers for telegram commands
@@ -124,47 +124,44 @@ def start(bot, update):
 # chat_map is dictionary of accounts-> sets of chat_ids
 # fafds45132 is a invalid account
 def follow(bot, update, args):
-    if args:
-        new_account = args[0]
-        print(new_account)
-        output_text = ""
-        chat_id = update.message.chat_id
-        if(debug_mode):
-            bot.send_message(chat_id=chat_id, text="This chat id is" + chat_id)
-        if(new_account in chat_map):
-            chats_following = chat_map[new_account]
-            if(chat_id in chats_following):
-                output_text = "Already follwing " + new_account + "."
-            else:
-                output_text = "Now following " + new_account + "."
-                chats_following.add(chat_id)
+    new_account = args[0]
+    chat_map = listener.chat_map
+    print(new_account)
+    output_text = ""
+    chat_id = update.message.chat_id
+    if(debug_mode):
+        bot.send_message(chat_id=chat_id, text="This chat id is" + chat_id)
+    if(new_account in chat_map):
+        chats_following = chat_map[new_account]
+        if(chat_id in chats_following):
+            output_text = "Already follwing " + new_account + "."
         else:
-            try:
-                twitter.get_user(new_account)
-                output_text = "Now following " + new_account + "."
-            except tweepy.error.TweepError:
-                output_text = "Error: " + new_account + " is not a valid Twitter account"
-            bot.send_message(chat_id=update.message.chat_id, text=output_text)
-            chat_map[new_account] = set([chat_id])
-            listener.update_listener(new_account)
-            stream.stop()
-            stream.filter(listener.account_list, async=True)
-
-        """        
-        if(follow_list.count(new_account) >= 1):
-            follow_list.append(args[0])
-            output_text = "Already following " + new_account + "."
-        else:
-            try:
-                twitter.get_user(new_account)
-                output_text = "Now following " + new_account + "."
-            except tweepy.error.TweepError:
-                output_text = "Error: " + new_account + " is not a valid Twitter account"
-            bot.send_message(chat_id=update.message.chat_id, text=output_text)
-            stream.filter(follow = follow_list, async=True)
-        """
+            output_text = "Now following " + new_account + "."
+            chats_following.add(chat_id)
     else:
-        bot.send_message(chat_id=chat_id, text="I need a username to follow! Try again with \"/follow <USER>\"")
+        try:
+            twitter.get_user(new_account)
+            output_text = "Now following " + new_account + "."
+        except tweepy.error.TweepError:
+            output_text = "Error: " + new_account + " is not a valid Twitter account"
+        bot.send_message(chat_id=update.message.chat_id, text=output_text)
+        chat_map[new_account] = set([chat_id])
+        listener.update_listener(new_account)
+        stream.filter(listener.chat_map.keys(), async=True)
+
+    """        
+    if(follow_list.count(new_account) >= 1):
+        follow_list.append(args[0])
+        output_text = "Already following " + new_account + "."
+    else:
+        try:
+            twitter.get_user(new_account)
+            output_text = "Now following " + new_account + "."
+        except tweepy.error.TweepError:
+            output_text = "Error: " + new_account + " is not a valid Twitter account"
+        bot.send_message(chat_id=update.message.chat_id, text=output_text)
+        stream.filter(follow = follow_list, async=True)
+    """
 
 def list_followed(bot, update):
     chat_id = update.message.chat_id
@@ -172,7 +169,7 @@ def list_followed(bot, update):
         bot.send_message(chat_id=chat_id, text="This chat id is" + chat_id)
     follow_set = set() 
     print("id of chat looking for follower list" + chat_id)
-    for account, chat_id_list in chat_map.items():
+    for account, chat_id_list in listener.chat_map.items():
         if(chat_id in chat_id_list):
             follow_set.add(account)
     # print("finished looking through set")
@@ -199,13 +196,12 @@ def debug(bot, update):
 
 def save_chat_map(signum, frame):
     updater.stop()
-    stream.stop()
     print("feh_bot: saving chat map...")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
     os.chdir(data_dir)
     print(os.getcwd())
-    pickle.dump(chat_map, open('chat_map.pkl', 'wb'))
+    pickle.dump(listener.chat_map, open('chat_map.pkl', 'wb'))
     """
     with open('chat_map.pkl', 'wb') as file:
         pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)

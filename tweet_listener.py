@@ -6,9 +6,15 @@ import tweepy
 # functionality for telegram
 class TweetStreamListener(tweepy.StreamListener):
 
+    def on_data(self, status):
+        #self.on_status(self, status)
+        return False
+
     def on_status(self, status):
         #print(status.text)
-        print(self.telegram.get_me())
+        #print(self.telegram.get_me())
+        for id in self.chat_map[status.author]:
+            self.telegram.send_message(id, status.text)
 
         # start doing cool things on update
 
@@ -20,13 +26,14 @@ class TweetStreamListener(tweepy.StreamListener):
         else:
             return True
 
+    #may not need
     def update_listener(self, account):
-        self.account_list.append(account)
+        self.chat_map.append(account)
 
     # Passes twitter api and telegram bot as "instance variables" (not sure 
     # what) equivalent in python is
-    def __init__(self, twitter, bot, accounts):
+    def __init__(self, twitter, bot, chat_map):
         self.api = twitter
         self.telegram = bot
-        self.account_list = accounts
+        self.chat_map = chat_map
         #print(bot.get_me())
