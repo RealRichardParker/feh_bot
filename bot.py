@@ -93,6 +93,9 @@ def read_config():
 # handlers for telegram commands
 def init_handlers(dispatcher):
 
+    global debug_mode
+    debug_mode = False
+
     # start command
     start_handler = ext.CommandHandler('start', start)
     dispatcher.add_handler(start_handler)
@@ -110,6 +113,10 @@ def init_handlers(dispatcher):
     help_handler = ext.CommandHandler("help", help)
     dispatcher.add_handler(help_handler)
 
+    # debug command
+    debug_handler = ext.CommandHandler("debug", debug)
+    dispatcher.add_handler(help_handler)
+
 # bot commands
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello! I am Feh Bot, and I follow Twitter accounts!")
@@ -121,6 +128,8 @@ def follow(bot, update, args):
     print(new_account)
     output_text = ""
     chat_id = update.message.chat_id
+    if(debug_mode):
+        bot.send_message(chat_id=chat_id, text="This chat id is" + chat_id)
     if(new_account in chat_map):
         chats_following = chat_map[new_account]
         if(chat_id in chats_following):
@@ -154,8 +163,10 @@ def follow(bot, update, args):
     """
 
 def list_followed(bot, update):
-    follow_set = set() 
     chat_id = update.message.chat_id
+    if(debug_mode):
+        bot.send_message(chat_id=chat_id, text="This chat id is" + chat_id)
+    follow_set = set() 
     print("id of chat looking for follower list" + chat_id)
     for account, chat_id_list in chat_map.items():
         if(chat_id in chat_id_list):
@@ -163,7 +174,7 @@ def list_followed(bot, update):
     # print("finished looking through set")
 
     if(len(follow_set) == 0):
-        bot.send_message(chat_id=update.message.chat_id, text="I am not currently following any accounts.")
+        bot.send_message(chat_id=chat_id, text="I am not currently following any accounts.")
     else:
         output_text = "Here are the accounts I am currently following:"
         for account in follow_set:
@@ -178,6 +189,10 @@ def help(bot, update):
                 "/help - prints this message"
     bot.send_message(chat_id=update.message.chat_id, text=help_text)
 
+def debug(bot, update):
+    debug_mode = True
+    bot.send_message(chat_id=update.message.chat_id, text=update.message.chat_id)
+
 def save_chat_map(signum, frame):
     updater.stop()
     print("feh_bot: saving chat map...")
@@ -191,6 +206,7 @@ def save_chat_map(signum, frame):
         pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
     """
     print('feh_bot: chat map saved!')
+    # exiting here seems to result in a threading exception
     sys.exit()
 
 if __name__ == "__main__":
