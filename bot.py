@@ -44,7 +44,7 @@ def read_config():
     #global vars
     global telegram_bot
     global twitter
-    #global listener
+    global listener
     global stream
 
     # get telegram keys
@@ -76,7 +76,7 @@ def read_config():
                 chat_map = pickle.load(open(file, 'rb'))
                 is_loaded = True
             print(file)
-        global listener
+        #global listener
         if is_loaded:
             print('previous data loaded!')
             print(chat_map)
@@ -201,6 +201,7 @@ def save_chat_map(signum, frame):
         os.mkdir(data_dir)
     os.chdir(data_dir)
     print(os.getcwd())
+    global listener
     pickle.dump(listener.chat_map, open('chat_map.pkl', 'wb'))
     """
     with open('chat_map.pkl', 'wb') as file:
