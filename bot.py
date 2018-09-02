@@ -7,6 +7,7 @@ import tweet_listener
 import os
 import pickle
 import signal
+import sys
 
 #TODO: store keys in env variables
 #TODO: export chat_map using pickle on program exit
@@ -190,7 +191,7 @@ def save_chat_map(signum, frame):
         pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
     """
     print('feh_bot: chat map saved!')
-    raise SystemExit
+    sys.exit()
 
 if __name__ == "__main__":
     signal.signal(signal.SIGTERM, save_chat_map)
