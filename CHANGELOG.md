@@ -7,7 +7,7 @@
 * Initial Completion, original idea is complete
 * Maintaining data between versions is not working properly
 
-## Future Changes
+## Future Potential Changes
 
 * Fix data not being read properly
 * Add feature of notifying of any missed tweets in case bot goes down
