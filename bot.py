@@ -86,6 +86,8 @@ def read_config():
     # creates listener and stream for inputted user
     listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map.keys())
     stream = tweepy.Stream(auth = twitter.auth, listener = listener)
+    stream.filter(listener.account_list, async=True)
+
 
 # handlers for telegram commands
 def init_handlers(dispatcher):
