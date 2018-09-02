@@ -192,9 +192,9 @@ def save_chat_map(signum, frame):
     raise SystemExit
 
 if __name__ == "__main__":
-    signal.signal(signal.SIGTERM, save_chat_map)
-    signal.signal(signal.SIGINT, save_chat_map)
     try:
+        signal.signal(signal.SIGTERM, save_chat_map)
+        signal.signal(signal.SIGINT, save_chat_map)
         main()
     except SystemExit:
         print("exiting program")
