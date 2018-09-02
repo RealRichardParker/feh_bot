@@ -147,6 +147,7 @@ def follow(bot, update, args):
             bot.send_message(chat_id=update.message.chat_id, text=output_text)
             chat_map[new_account] = set([chat_id])
             listener.update_listener(new_account)
+            stream.stop()
             stream.filter(listener.account_list, async=True)
 
         """        
@@ -198,6 +199,7 @@ def debug(bot, update):
 
 def save_chat_map(signum, frame):
     updater.stop()
+    stream.stop()
     print("feh_bot: saving chat map...")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
