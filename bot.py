@@ -112,6 +112,7 @@ def init_handlers(dispatcher):
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello! I am Feh Bot, and I follow Twitter accounts!")
 
+# chat_map is dictionary of accounts-> sets of chat_ids
 # fafds45132 is a invalid account
 def follow(bot, update, args):
     new_account = args[0]
@@ -153,6 +154,7 @@ def follow(bot, update, args):
 def list_followed(bot, update):
     follow_set = set() 
     chat_id = update.message.chat_id
+    print("id of chat looking for follower list" + chat_id)
     for account, chat_id_list in chat_map.items():
         if(chat_id in chat_id_list):
             follow_set.add(account)
