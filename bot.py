@@ -44,7 +44,7 @@ def read_config():
     #global vars
     global telegram_bot
     global twitter
-    global listener
+    #global listener
     global stream
 
     # get telegram keys
