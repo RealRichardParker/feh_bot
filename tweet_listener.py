@@ -26,9 +26,12 @@ class TweetStreamListener(tweepy.StreamListener):
         else:
             return True
 
-    #may not need
-    def update_listener(self, account):
-        self.chat_map.append(account)
+    # update chat_map
+    def update(self, account, id):
+        self.chat_map[account].append(id)
+    
+    def get_chat_map(self):
+        return self.chat_map
 
     # Passes twitter api and telegram bot as "instance variables" (not sure 
     # what) equivalent in python is

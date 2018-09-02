@@ -82,18 +82,15 @@ def read_config():
             print(chat_map)
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map)
             stream = tweepy.Stream(auth = twitter.auth, listener=listener)
-            stream.filter(listener.chat_map.keys(), async=True)
+            stream.filter(listener.get_chat_map().keys(), async=True)
         else:
             print("no data loaded")
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, dict())
             stream = tweepy.Stream(auth = twitter.auth, listener=listener)
-            stream.filter(listener.chat_map.keys(), async=True)
+            stream.filter(listener.get_chat_map().keys(), async=True)
 
     # creates listener and stream for inputted user
     
-    
-
-
 # handlers for telegram commands
 def init_handlers(dispatcher):
 
@@ -146,12 +143,11 @@ def follow(bot, update, args):
         try:
             twitter.get_user(new_account)
             output_text = "Now following " + new_account + "."
+            listener.update(new_account, chat_id)
+            stream.filter(listener.chat_map.keys(), async=True)
         except tweepy.error.TweepError:
             output_text = "Error: " + new_account + " is not a valid Twitter account"
         bot.send_message(chat_id=update.message.chat_id, text=output_text)
-        chat_map[new_account] = set([chat_id])
-        listener.update_listener(new_account)
-        stream.filter(listener.chat_map.keys(), async=True)
 
     """        
     if(follow_list.count(new_account) >= 1):
