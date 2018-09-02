@@ -79,6 +79,7 @@ def read_config():
         if is_loaded:
             print('previous data loaded!')
             print(chat_map)
+            global listener
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map)
         else:
             print("no data loaded")
