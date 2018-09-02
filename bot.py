@@ -76,10 +76,10 @@ def read_config():
                 chat_map = pickle.load(open(file, 'rb'))
                 is_loaded = True
             print(file)
+        global listener
         if is_loaded:
             print('previous data loaded!')
             print(chat_map)
-            global listener
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map)
         else:
             print("no data loaded")
@@ -87,7 +87,7 @@ def read_config():
 
     # creates listener and stream for inputted user
     
-    stream = tweepy.Stream(auth = twitter.auth, listener = listener)
+    stream = tweepy.Stream(auth = twitter.auth, listener=listener)
     stream.filter(listener.chat_map.keys(), async=True)
 
 
