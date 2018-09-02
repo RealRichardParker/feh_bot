@@ -81,14 +81,17 @@ def read_config():
             print('previous data loaded!')
             print(chat_map)
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map)
+            stream = tweepy.Stream(auth = twitter.auth, listener=listener)
+            stream.filter(listener.chat_map.keys(), async=True)
         else:
             print("no data loaded")
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, dict())
+            stream = tweepy.Stream(auth = twitter.auth, listener=listener)
+            stream.filter(listener.chat_map.keys(), async=True)
 
     # creates listener and stream for inputted user
     
-    stream = tweepy.Stream(auth = twitter.auth, listener=listener)
-    stream.filter(listener.chat_map.keys(), async=True)
+    
 
 
 # handlers for telegram commands
