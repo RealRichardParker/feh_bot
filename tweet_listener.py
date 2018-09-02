@@ -25,8 +25,8 @@ class TweetStreamListener(tweepy.StreamListener):
 
     # Passes twitter api and telegram bot as "instance variables" (not sure 
     # what) equivalent in python is
-    def __init__(self, twitter, bot):
+    def __init__(self, twitter, bot, accounts):
         self.api = twitter
         self.telegram = bot
-        self.account_list = []
+        self.account_list = accounts
         #print(bot.get_me())

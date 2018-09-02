@@ -64,10 +64,6 @@ def read_config():
     auth.set_access_token(access_token, access_secret)
     twitter = tweepy.API(auth)
 
-    # creates listener and stream for inputted user
-    listener = tweet_listener.TweetStreamListener(twitter, telegram_bot)
-    stream = tweepy.Stream(auth = twitter.auth, listener = listener)
-
     # reads in data from previous instance, if it exists
     global data_dir
     data_dir = config.get('Data Storage Directory', 'dir')
@@ -87,6 +83,9 @@ def read_config():
         else:
             print("no data loaded")
 
+    # creates listener and stream for inputted user
+    listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, chat_map.keys())
+    stream = tweepy.Stream(auth = twitter.auth, listener = listener)
 
 # handlers for telegram commands
 def init_handlers(dispatcher):

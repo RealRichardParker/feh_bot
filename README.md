@@ -1,5 +1,7 @@
 # feh_bot
-feh_bot is a bot that forwards tweets in real-time to Telegram group chats or individuals. 
+feh_bot is a bot that forwards tweets in real-time to Telegram group chats or individuals.
+
+Currently, my instance of the bot is nonoperational due to bugs.
 
 ## Getting Started
 
