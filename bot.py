@@ -115,7 +115,7 @@ def init_handlers(dispatcher):
 
     # debug command
     debug_handler = ext.CommandHandler("debug", debug)
-    dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(debug_handler)
 
 # bot commands
 def start(bot, update):
