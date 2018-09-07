@@ -87,9 +87,6 @@ def read_config():
             print("no data loaded")
             listener = tweet_listener.TweetStreamListener(twitter, telegram_bot, dict())
             stream = tweepy.Stream(auth = twitter.auth, listener=listener)
-            stream.filter(listener.get_chat_map().keys(), async=True)
-
-    # creates listener and stream for inputted user
     
 # handlers for telegram commands
 def init_handlers(dispatcher):
@@ -126,13 +123,13 @@ def start(bot, update):
 # fafds45132 is a invalid account
 def follow(bot, update, args):
     new_account = args[0]
-    chat_map = listener.chat_map
+    chat_map = listener.get_chat_map()
     print(new_account)
     output_text = ""
     chat_id = update.message.chat_id
     if(debug_mode):
         bot.send_message(chat_id=chat_id, text="This chat id is" + chat_id)
-    if(new_account in chat_map):
+    if(new_account in chat_map.keys()):
         chats_following = chat_map[new_account]
         if(chat_id in chats_following):
             output_text = "Already follwing " + new_account + "."
@@ -203,10 +200,6 @@ def save_chat_map(signum, frame):
     print(os.getcwd())
     global listener
     pickle.dump(listener.chat_map, open('chat_map.pkl', 'wb'))
-    """
-    with open('chat_map.pkl', 'wb') as file:
-        pickle.dump(chat_map, file, pickle.HIGHEST_PROTOCOL)
-    """
     print('feh_bot: chat map saved!')
     # exiting here seems to result in a threading exception
     sys.exit()
